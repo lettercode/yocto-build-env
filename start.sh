@@ -11,7 +11,7 @@ SCRIPT_PATH=$(dirname "${SCRIPT}")
 # Build the container
 "${SCRIPT_PATH}"/docker/build.sh
 
-# Create the same user (UID,GID) used in the actual host session
+# Create an user with the same UID used in the actual host session
 uid=$(id -u)
 username="build"
 gid=8888

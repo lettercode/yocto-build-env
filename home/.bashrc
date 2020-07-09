@@ -12,6 +12,7 @@ function init-env() {
   # Define workspace directory
   local workspace_dir
   workspace_dir="workspace"
+  workspace_dir_abs=$(realpath "${workspace_dir}")
   if [ -n "${1}" ]; then
     workspace_dir=${1}
   fi
@@ -26,11 +27,14 @@ function init-env() {
   # Define build directory
   local build_dir
   build_dir="build"
+  build_dir_abs=$(realpath "${build_dir}")
   if [ -n "${2}" ]; then
     build_dir=${2}
   fi
 
   . sources/poky/oe-init-build-env "${build_dir}"
+
+  ~/init_config.sh "${workspace_dir_abs}" "${build_dir_abs}"
 }
 
 echo "***********************************************"

@@ -1,0 +1,5 @@
+*
+!.gitignore
+!.bashrc
+!init_config.sh
+!init_workspace.sh
