@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [ "$(id -u)" == "0" ]; then
   echo "!You should NOT run this script as root!"
   exit 1
@@ -9,26 +11,22 @@ SCRIPT=$(realpath "${0}")
 SCRIPT_PATH=$(dirname "${SCRIPT}")
 
 # Build the container
-"${SCRIPT_PATH}"/docker/build.sh
+uid=$(id -u)
+gid=$(id -g)
+USER_ID=$uid GROUP_ID=$gid "${SCRIPT_PATH}"/docker/build.sh
 
 # Create an user with the same UID used in the actual host session
-uid=$(id -u)
-username="build"
-gid=8888
-groupname="build"
-home_dir="/home/${username}"
-empty_password_hash="U6aMy0wojraho"
-work_directory="/buildenv"
-do_login="groupadd -g ${gid} ${groupname}"
-do_login+=" && useradd --password ${empty_password_hash} --shell /bin/bash --uid ${uid} --gid ${gid} --no-create-home --home-dir ${home_dir} ${username}"
-do_login+=" && usermod -aG sudo ${username}"
-do_login+=" && usermod -aG users ${username}"
-do_login+=" && cd ${work_directory} && su ${username}"
+source "${SCRIPT_PATH}/docker/metadata.sh"
+home_dir="/home/${USERNAME}"
 
 # Mount host paths we want in the container
 mounts=()
 mounts+=("--mount" "type=bind,source=${SCRIPT_PATH}/home,target=${home_dir}")
-mounts+=("--mount" "type=bind,source=$(pwd),target=${work_directory}")
+mounts+=("--mount" "type=bind,source=${SCRIPT_PATH}/buildenv,target=${WORKDIR}")
+ssh_dir="$(getent passwd ${uid} | cut -d: -f6)/.ssh"
+if [ -d "${ssh_dir}" ]; then
+  mounts+=("--mount" "type=bind,source=${ssh_dir},target=${home_dir}/.ssh")
+fi
 
 # Start the containerized environment
-docker container run -it --rm --name yocto-build-env "${mounts[@]}" lettercode/yocto-build-env:1.0 sudo bash -c "${do_login}"
+docker container run -it --init --rm --name "${IMAGE}" "${mounts[@]}" "${MAINTAINER}/${IMAGE}:${VERSION}"

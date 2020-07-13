@@ -1,0 +1,5 @@
+MAINTAINER="lettercode"
+IMAGE="yocto-build-env"
+VERSION="1.0"
+USERNAME="build"
+WORKDIR="/buildenv"
