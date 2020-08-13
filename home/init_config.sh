@@ -20,6 +20,13 @@ cat <<EOF >"${build_dir}/conf/site.conf"
 # ==================================================
 DL_DIR ?= "${cache_dir}/downloads"
 SSTATE_DIR ?= "${cache_dir}/sstate"
+
+# Free the space used in tmp/work
+# to retain some packages use
+# RM_WORK_EXCLUDE += "your-package"
+# =================================
+INHERIT += "rm_work"
+RM_OLD_IMAGE = "1"
 EOF
 
 # Add user customizations
