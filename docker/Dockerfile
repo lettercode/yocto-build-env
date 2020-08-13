@@ -23,8 +23,11 @@ RUN apt-get -y install build-essential gcc-multilib g++-multilib
 RUN apt-get -y install chrpath cpio diffstat gawk wget curl
 RUN apt-get -y install python python3 python3-pip
 
+# Wic dependencies (wic ls)
+RUN apt-get -y install parted mtools
+
 # Utilities
-RUN apt-get -y install texinfo
+RUN apt-get -y install texinfo nano
 
 # Use bash as default shell
 RUN rm /bin/sh && ln -s bash /bin/sh

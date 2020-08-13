@@ -17,3 +17,8 @@ echo "***********************************************"
 echo "This container aims to simplify the creation of embedded projects by providing"
 echo "a containerized environment.To begin you should start by issuing:"
 echo "init-env workspace build"
+
+function finish() {
+  echo "Exiting build environment..."
+}
+trap finish EXIT
