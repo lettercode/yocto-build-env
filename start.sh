@@ -23,10 +23,6 @@ home_dir="/home/${USERNAME}"
 mounts=()
 mounts+=("--mount" "type=bind,source=${SCRIPT_PATH}/home,target=${home_dir}")
 mounts+=("--mount" "type=bind,source=${SCRIPT_PATH}/buildenv,target=${WORKDIR}")
-ssh_dir="$(getent passwd ${uid} | cut -d: -f6)/.ssh"
-if [ -d "${ssh_dir}" ]; then
-  mounts+=("--mount" "type=bind,source=${ssh_dir},target=${home_dir}/.ssh")
-fi
 
 # provide (empty) folder buildenv
 mkdir -p buildenv
