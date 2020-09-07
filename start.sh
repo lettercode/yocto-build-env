@@ -28,5 +28,8 @@ if [ -d "${ssh_dir}" ]; then
   mounts+=("--mount" "type=bind,source=${ssh_dir},target=${home_dir}/.ssh")
 fi
 
+# provide (empty) folder buildenv
+mkdir -p buildenv
+
 # Start the containerized environment
 docker container run -it --init --rm --name "${IMAGE}" "${mounts[@]}" "${MAINTAINER}/${IMAGE}:${VERSION}"
